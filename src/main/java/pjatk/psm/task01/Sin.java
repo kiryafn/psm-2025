@@ -1,6 +1,6 @@
 package pjatk.psm.task01;
 
-public class Main {
+public class Sin {
     public static void main(String[] args) {
         System.out.println("sin(2) = ");
         System.out.println(Math.sin(2));
