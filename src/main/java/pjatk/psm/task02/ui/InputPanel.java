@@ -29,9 +29,9 @@ public class InputPanel extends JPanel {
         add(sx0Field);
         add(new JLabel("Initial Y (sy0):"));
         add(sy0Field);
-        add(new JLabel("Initial Velocity X (vx0):"));
+        add(new JLabel("Initial Speed X (vx0):"));
         add(vx0Field);
-        add(new JLabel("Initial Velocity Y (vy0):"));
+        add(new JLabel("Initial Speed Y (vy0):"));
         add(vy0Field);
 
         // Кнопка запуска симуляции
@@ -41,7 +41,6 @@ public class InputPanel extends JPanel {
     public void setOnSimulateListener(SimulateListener listener) {
         simulateButton.addActionListener(e -> {
             try {
-                // Чтение входных данных
                 double dt = Double.parseDouble(dtField.getText());
                 double m = Double.parseDouble(mField.getText());
                 double k = Double.parseDouble(kField.getText());
@@ -50,7 +49,6 @@ public class InputPanel extends JPanel {
                 double vx0 = Double.parseDouble(vx0Field.getText());
                 double vy0 = Double.parseDouble(vy0Field.getText());
 
-                // Передача данных в listener
                 listener.onSimulate(dt, m, k, sx0, sy0, vx0, vy0);
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Invalid input! Please enter numeric values.",

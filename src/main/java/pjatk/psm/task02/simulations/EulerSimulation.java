@@ -40,7 +40,6 @@ public class EulerSimulation {
             xData.add(sx);
             yData.add(sy);
 
-            // Ускорение с учетом сопротивления
             double ax = (m * gx - k * vx) / m;
             double ay = (m * gy - k * vy) / m;
 
@@ -51,12 +50,10 @@ public class EulerSimulation {
             sy += vy * dt;
 
             if (sy < 0) {
-                // Вычисление момента касания земли с линейной интерполяцией
-                double tGround = - (yData.get(yData.size() - 1) / vy); // время пересечения земли
-                double xGround = xData.get(xData.size() - 1) + vx * tGround; // положение X на земле
-                double yGround = 0.0; // на уровне земли
+                double tGround = - (yData.get(yData.size() - 1) / vy);
+                double xGround = xData.get(xData.size() - 1) + vx * tGround;
+                double yGround = 0.0;
 
-                // Добавление последней точки
                 xData.add(xGround);
                 yData.add(yGround);
 

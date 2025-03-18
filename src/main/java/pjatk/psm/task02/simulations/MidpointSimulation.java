@@ -40,28 +40,25 @@ public class MidpointSimulation {
             xData.add(sx);
             yData.add(sy);
 
-            // 1️⃣ Вычисляем ускорение в начальной точке
+            //a at starting point
             double ax1 = (m * gx - k * vx) / m;
             double ay1 = (m * gy - k * vy) / m;
 
-            // 2️⃣ Вычисляем промежуточные скорости
+            //v at mid
             double vx_mid = vx + ax1 * (dt / 2);
             double vy_mid = vy + ay1 * (dt / 2);
 
-            // 3️⃣ Вычисляем ускорение в середине шага
+            //a at mid
             double ax2 = (m * gx - k * vx_mid) / m;
             double ay2 = (m * gy - k * vy_mid) / m;
 
-            // 4️⃣ Обновляем скорость с учетом середины шага
             vx += ax2 * dt;
             vy += ay2 * dt;
 
-            // 5️⃣ Обновляем координаты с учетом середины шага
             sx += vx_mid * dt;
             sy += vy_mid * dt;
 
             if (sy < 0) {
-                // Линейная интерполяция момента касания земли
                 double tGround = -yData.get(yData.size() - 1) / vy;
                 double xGround = xData.get(xData.size() - 1) + vx * tGround;
                 double yGround = 0.0;

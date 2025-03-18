@@ -32,8 +32,7 @@ public class ChartPanel extends JPanel {
     }
 
     public void updateChart(String seriesName, List<Double> xData, List<Double> yData, String color) {
-        // Проверка на пустые данные
-        if (xData == null || yData == null || xData.isEmpty() || yData.isEmpty()) {
+         if (xData == null || yData == null || xData.isEmpty() || yData.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "Simulated data is empty. Please check your inputs!",
                     "Error",
@@ -41,13 +40,11 @@ public class ChartPanel extends JPanel {
             return;
         }
 
-        // Добавляем или обновляем серию данных
         if (chart.getSeriesMap().containsKey(seriesName)) {
             chart.updateXYSeries(seriesName, xData, yData, null);
         } else {
             var series = chart.addSeries(seriesName, xData, yData);
 
-            // Применяем стиль на основе цвета
             switch (color.toLowerCase()) {
                 case "blue":
                     series.setMarker(SeriesMarkers.CIRCLE);
@@ -64,7 +61,7 @@ public class ChartPanel extends JPanel {
             }
         }
 
-        repaint();  // Перерисовываем панель
+        repaint();
         revalidate();
     }
 }
