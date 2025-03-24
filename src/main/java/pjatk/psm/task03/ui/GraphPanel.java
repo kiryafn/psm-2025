@@ -3,6 +3,8 @@ package pjatk.psm.task03.ui;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -40,7 +42,7 @@ public class GraphPanel extends JPanel {
         energyChartPanel.setChart(chart);
     }
 
-    // Метод для обновления графика фазовой траектории
+    // Метод для обновления графика фазовой траектории с точной настройкой точки в виде круга
     public void updatePhaseChart(XYSeries phase, String method) {
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(phase);
@@ -51,6 +53,24 @@ public class GraphPanel extends JPanel {
                 "Angular Velocity (rad/s)",
                 dataset
         );
+
+        // Доступ к построению графика
+        XYPlot plot = chart.getXYPlot();
+
+        // Настраиваем кастомный рендерер
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+
+        // Отключаем соединение точек
+        renderer.setSeriesLinesVisible(0, false);
+
+        // Задаем форму: маленькие круги вместо квадратов
+        renderer.setSeriesShape(0, new java.awt.geom.Ellipse2D.Double(-2, -2, 4, 4)); // Круг размером 4x4 пикселя
+        renderer.setSeriesShapesVisible(0, true);
+
+        // Применяем рендерер к графику
+        plot.setRenderer(renderer);
+
+        // Обновляем диаграмму в панели
         phaseChartPanel.setChart(chart);
     }
 

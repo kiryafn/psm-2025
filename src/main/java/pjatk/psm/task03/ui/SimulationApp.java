@@ -18,6 +18,7 @@ public class SimulationApp extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1200, 600);
         setLayout(new BorderLayout());
+        setLocationRelativeTo(null);
 
         inputPanel = new InputPanel();
         graphPanel = new GraphPanel();
