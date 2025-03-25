@@ -1,9 +1,9 @@
 package pjatk.psm.task03.ui;
 
 import org.jfree.data.xy.XYSeries;
-import pjatk.psm.task03.simulations.BaseSimulation;
 import pjatk.psm.task03.simulations.MidpointSimulation;
 import pjatk.psm.task03.simulations.RK4Simulation;
+import pjatk.psm.task03.simulations.Simulation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,6 @@ public class SimulationApp extends JFrame {
 
     private void simulate() {
         try {
-            // Получаем данные от пользователя
             double mass = inputPanel.getMass();
             double length = inputPanel.getLength();
             double initialAngle = inputPanel.getInitialAngle();
@@ -41,7 +40,7 @@ public class SimulationApp extends JFrame {
             String method = inputPanel.getSimulationMethod();
 
             // Выбираем метод симуляции
-            BaseSimulation simulation;
+            Simulation simulation;
             if ("Midpoint".equals(method)) {
                 simulation = new MidpointSimulation(mass, length, initialAngle, 0, timeStep, totalTime);
             } else {
@@ -72,7 +71,6 @@ public class SimulationApp extends JFrame {
                 phaseSeries.add(angle, omega);
             }
 
-            // Обновляем графики с указанием метода
             graphPanel.updateEnergyChart(potentialSeries, kineticSeries, totalSeries, method);
             graphPanel.updatePhaseChart(phaseSeries, method);
 

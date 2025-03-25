@@ -28,7 +28,7 @@ public class InputPanel extends JPanel {
         add(tfTime);
 
         add(new JLabel("Time Step (s):"));
-        tfDt = new JTextField("0.01", 5);
+        tfDt = new JTextField("0.1", 5);
         add(tfDt);
 
         add(new JLabel("Method:"));

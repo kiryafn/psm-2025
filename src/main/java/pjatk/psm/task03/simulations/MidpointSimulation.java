@@ -17,21 +17,17 @@ public class MidpointSimulation extends BaseSimulation {
         for (int i = 0; i <= steps; i++) {
             double time = i * timeStep;
 
-            // Сохраняем текущие значения
             recordResult(time, currentAngle, currentOmega);
 
-            // Предиктор: рассчитываем наклоны
             double slopeAlpha1 = currentOmega;
             double slopeOmega1 = -(G / length) * Math.sin(currentAngle);
 
             double predictedAlpha = currentAngle + timeStep * slopeAlpha1;
             double predictedOmega = currentOmega + timeStep * slopeOmega1;
 
-            // Корректор: рассчитываем новые наклоны
             double slopeAlpha2 = predictedOmega;
             double slopeOmega2 = -(G / length) * Math.sin(predictedAlpha);
 
-            // Обновляем значения
             currentAngle += 0.5 * timeStep * (slopeAlpha1 + slopeAlpha2);
             currentOmega += 0.5 * timeStep * (slopeOmega1 + slopeOmega2);
         }
