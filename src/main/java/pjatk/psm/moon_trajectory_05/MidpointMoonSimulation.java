@@ -3,64 +3,82 @@ package pjatk.psm.moon_trajectory_05;
 import org.jfree.data.xy.XYSeries;
 
 public class MidpointMoonSimulation {
-    static final double G = 6.6743e-11;
 
-    //mass [kg]
-    static final double M_S = 1.989e30;
-    static final double M_E = 5.972e24;
-    static final double M_M = 7.347e22;
+    // Физические константы
+    static final double G = 6.6743e-11;      // Гравитационная постоянная [м^3/(кг·с^2)]
+    static final double M_S = 1.989e30;        // Масса Солнца [кг]
+    static final double M_E = 5.972e24;        // Масса Земли [кг]
+    static final double M_M = 7.347e22;        // Масса Луны [кг]
 
-    //Distances
-    static final double R_es = 1.5e11;
-    static final double R_em = 3.844e8;
+    // Радиусы орбит
+    static final double R_es = 1.5e11;         // Расстояние Земля-Солнце [м]
+    static final double R_em = 3.844e8;         // Расстояние Земля-Луна [м]
 
+    // Коэффициент масштабирования траектории Луны для визуализации
     static final double MOON_TRAJECTORY_SCALE = 25.0;
 
-    double dt = 3600;                       // 1 hour in sec
-    double totalTime = 365.25 * 24 * dt;  // 1 year in sec
+    // Параметры симуляции
+    double dt = 3600;                       // 1 час (в секундах)
+    double totalTime;    // по умолчанию 1 год (в секундах)
 
+    // Состояние Земли (абсолютные координаты относительно Солнца)
     double xE, yE;
     double vxE, vyE;
 
+    // Состояние Луны (координаты относительно Земли)
     double xM, yM;
     double vxM, vyM;
 
+    // Серии для графика
     private final XYSeries earthSeries;
     private final XYSeries moonSeries;
     private final XYSeries sunSeries;
 
+    // Конструктор по умолчанию – 1 год симуляции
     public MidpointMoonSimulation() {
+        this(365.25 * 24 * 3600);
+    }
+
+    // Конструктор с заданной длительностью симуляции (в секундах)
+    public MidpointMoonSimulation(double totalTime) {
+        this.totalTime = totalTime;
         earthSeries = new XYSeries("Earth Orbit");
         moonSeries  = new XYSeries("Moon Trajectory");
         sunSeries   = new XYSeries("Sun");
 
+        // Солнце в центре (0,0)
         sunSeries.add(0, 0);
 
+        // Начальные условия для Земли:
         xE = R_es;
         yE = 0;
         vxE = 0;
         vyE = Math.sqrt(G * M_S / R_es);
 
+        // Начальные условия для Луны относительно Земли:
         xM = R_em;
         yM = 0;
         vxM = 0;
         vyM = Math.sqrt(G * (M_E + M_M) / R_em);
     }
 
+    /**
+     * Выполняет численное моделирование движения Земли и Луны методом середины.
+     */
     public void run() {
         int steps = (int) (totalTime / dt);
-
         for (int i = 0; i < steps; i++) {
             earthSeries.add(xE, yE);
             moonSeries.add(xE + xM * MOON_TRAJECTORY_SCALE,
                     yE + yM * MOON_TRAJECTORY_SCALE);
 
+            // Интегрирование движения Земли вокруг Солнца
             double rE = Math.sqrt(xE * xE + yE * yE);
             double axE = -G * M_S * xE / (rE * rE * rE);
             double ayE = -G * M_S * yE / (rE * rE * rE);
 
-            double xE_mid  = xE  + vxE * dt / 2;
-            double yE_mid  = yE  + vyE * dt / 2;
+            double xE_mid  = xE + vxE * dt / 2;
+            double yE_mid  = yE + vyE * dt / 2;
             double vxE_mid = vxE + axE * dt / 2;
             double vyE_mid = vyE + ayE * dt / 2;
 
@@ -73,12 +91,13 @@ public class MidpointMoonSimulation {
             vxE += axE_mid * dt;
             vyE += ayE_mid * dt;
 
+            // Интегрирование движения Луны вокруг Земли
             double rM = Math.sqrt(xM * xM + yM * yM);
             double axM = -G * (M_E + M_M) * xM / (rM * rM * rM);
             double ayM = -G * (M_E + M_M) * yM / (rM * rM * rM);
 
-            double xM_mid  = xM  + vxM * dt / 2;
-            double yM_mid  = yM  + vyM * dt / 2;
+            double xM_mid  = xM + vxM * dt / 2;
+            double yM_mid  = yM + vyM * dt / 2;
             double vxM_mid = vxM + axM * dt / 2;
             double vyM_mid = vyM + ayM * dt / 2;
 

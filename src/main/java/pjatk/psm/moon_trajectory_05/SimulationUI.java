@@ -6,78 +6,130 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import javax.swing.JFrame;
-import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 
-class SimulationUI {
+public class SimulationUI {
 
-    private final XYSeries earthSeries;
-    private final XYSeries moonSeries;
-    private final XYSeries sunSeries;
+    private XYSeriesCollection dataset;
+    private ChartPanel chartPanel;
+    private JTextField timeField;
+    private JFrame frame;
 
-    public SimulationUI(XYSeries earthSeries, XYSeries moonSeries, XYSeries sunSeries) {
-        this.earthSeries = earthSeries;
-        this.moonSeries  = moonSeries;
-        this.sunSeries   = sunSeries;
-    }
-
-    /**
-     * Создание и отображение окна с графиком.
-     */
-    public void displayChart() {
-        // Собираем все серии в один набор данных
-        XYSeriesCollection dataset = new XYSeriesCollection();
+    // Конструктор принимает серии, полученные из симуляции
+    public SimulationUI(org.jfree.data.xy.XYSeries earthSeries,
+                        org.jfree.data.xy.XYSeries moonSeries,
+                        org.jfree.data.xy.XYSeries sunSeries) {
+        dataset = new XYSeriesCollection();
         dataset.addSeries(earthSeries);  // Серия 0 – орбита Земли
         dataset.addSeries(moonSeries);     // Серия 1 – траектория Луны
         dataset.addSeries(sunSeries);      // Серия 2 – Солнце
+    }
 
-        // Создаём базовый график
+    /**
+     * Создает окно с графиком и панелью управления.
+     */
+    public void displayChart() {
         JFreeChart chart = ChartFactory.createXYLineChart(
                 "Moon Orbit Simulation",
                 "X (m)",
                 "Y (m)",
                 dataset,
                 PlotOrientation.VERTICAL,
-                true,    // legend
+                true,    // легенда
                 true,    // tooltips
                 false    // urls
         );
-
-        // Применяем кастомизацию для отображения ТОЛЬКО точек
         customizeChart(chart);
+        chartPanel = new ChartPanel(chart);
 
-        // Размещаем график в окне Swing
-        ChartPanel chartPanel = new ChartPanel(chart);
-        JFrame frame = new JFrame("Moon Orbit Simulation");
+        // Панель управления: текстовое поле для длительности симуляции (в годах) и кнопка "Simulate"
+        JPanel controlPanel = new JPanel();
+        controlPanel.add(new JLabel("Simulation Time (years):"));
+        timeField = new JTextField(10);
+        // По умолчанию 1 год
+        timeField.setText("1");
+        controlPanel.add(timeField);
+
+        JButton simulateButton = new JButton("Simulate");
+        controlPanel.add(simulateButton);
+
+        simulateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                simulateAndUpdateChart();
+            }
+        });
+
+        frame = new JFrame("Moon Orbit Simulation");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(chartPanel);
+        frame.setLayout(new BorderLayout());
+        frame.add(chartPanel, BorderLayout.CENTER);
+        frame.add(controlPanel, BorderLayout.SOUTH);
         frame.setSize(800, 800);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
+    /**
+     * Создает новую симуляцию с заданной длительностью (в годах), запускает расчет и обновляет график.
+     */
+    private void simulateAndUpdateChart() {
+        double years;
+        try {
+            years = Double.parseDouble(timeField.getText().trim());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Invalid simulation time format.");
+            return;
+        }
+        // Переводим длительность из лет в секунды
+        double simTimeSec = years * 365.25 * 24 * 3600;
+        MidpointMoonSimulation simulation = new MidpointMoonSimulation(simTimeSec);
+        simulation.run();
+
+        dataset.removeAllSeries();
+        dataset.addSeries(simulation.getEarthSeries());
+        dataset.addSeries(simulation.getMoonSeries());
+        dataset.addSeries(simulation.getSunSeries());
+
+        JFreeChart chart = ChartFactory.createXYLineChart(
+                "Moon Orbit Simulation",
+                "X (m)",
+                "Y (m)",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+        customizeChart(chart);
+        chartPanel.setChart(chart);
+    }
+
+    /**
+     * Кастомизация графика: задаются цвета, стиль линий и диапазоны осей.
+     */
     private void customizeChart(JFreeChart chart) {
         XYPlot plot = chart.getXYPlot();
 
-        // Фон и сетка
-        plot.setBackgroundPaint(Color.WHITE);
-        plot.setDomainGridlinePaint(Color.GRAY);
-        plot.setRangeGridlinePaint(Color.GRAY);
+        plot.setBackgroundPaint(new Color(10, 0, 48));
+        plot.setDomainGridlinePaint(Color.BLACK);
+        plot.setRangeGridlinePaint(Color.BLACK);
 
-        // Рендерер, который отрисовывает только точки
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 
-        // Серия 0: Орбита Земли – зеленые точки
+        // Серия 0: орбита Земли – зеленые точки
         renderer.setSeriesLinesVisible(0, false);
         renderer.setSeriesShapesVisible(0, true);
-        renderer.setSeriesPaint(0, Color.GREEN);
+        renderer.setSeriesPaint(0, new Color(0, 120, 1));
         renderer.setSeriesShape(0, new Ellipse2D.Double(-2, -2, 2, 2));
 
-        // Серия 1: Траектория Луны – серые точки
+        // Серия 1: траектория Луны – серые точки
         renderer.setSeriesLinesVisible(1, false);
         renderer.setSeriesShapesVisible(1, true);
         renderer.setSeriesPaint(1, Color.LIGHT_GRAY);
@@ -91,7 +143,6 @@ class SimulationUI {
 
         plot.setRenderer(renderer);
 
-        // Фиксированный диапазон осей для оптимального масштабирования
         plot.getDomainAxis().setRange(-2e11, 2e11);
         plot.getRangeAxis().setRange(-2e11, 2e11);
     }
