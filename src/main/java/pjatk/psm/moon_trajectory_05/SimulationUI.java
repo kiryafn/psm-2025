@@ -6,6 +6,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.JFrame;
@@ -14,11 +15,11 @@ import java.awt.geom.Ellipse2D;
 
 class SimulationUI {
 
-    private final org.jfree.data.xy.XYSeries earthSeries;
-    private final org.jfree.data.xy.XYSeries moonSeries;
-    private final org.jfree.data.xy.XYSeries sunSeries;
+    private final XYSeries earthSeries;
+    private final XYSeries moonSeries;
+    private final XYSeries sunSeries;
 
-    public SimulationUI(org.jfree.data.xy.XYSeries earthSeries, org.jfree.data.xy.XYSeries moonSeries, org.jfree.data.xy.XYSeries sunSeries) {
+    public SimulationUI(XYSeries earthSeries, XYSeries moonSeries, XYSeries sunSeries) {
         this.earthSeries = earthSeries;
         this.moonSeries  = moonSeries;
         this.sunSeries   = sunSeries;
@@ -67,25 +68,25 @@ class SimulationUI {
 
         // Фон и сетка
         plot.setBackgroundPaint(Color.WHITE);
-        plot.setDomainGridlinePaint(Color.LIGHT_GRAY);
-        plot.setRangeGridlinePaint(Color.LIGHT_GRAY);
+        plot.setDomainGridlinePaint(Color.GRAY);
+        plot.setRangeGridlinePaint(Color.GRAY);
 
         // Рендерер, который отрисовывает только точки
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 
-        // Серия 0: Орбита Земли – красные точки
+        // Серия 0: Орбита Земли – зеленые точки
         renderer.setSeriesLinesVisible(0, false);
         renderer.setSeriesShapesVisible(0, true);
-        renderer.setSeriesPaint(0, Color.RED);
+        renderer.setSeriesPaint(0, Color.GREEN);
         renderer.setSeriesShape(0, new Ellipse2D.Double(-2, -2, 4, 4));
 
-        // Серия 1: Траектория Луны – синие точки
+        // Серия 1: Траектория Луны – серые точки
         renderer.setSeriesLinesVisible(1, false);
         renderer.setSeriesShapesVisible(1, true);
-        renderer.setSeriesPaint(1, Color.BLUE);
+        renderer.setSeriesPaint(1, Color.LIGHT_GRAY);
         renderer.setSeriesShape(1, new Ellipse2D.Double(-2, -2, 4, 4));
 
-        // Серия 2: Солнце – одна жёлтая точка
+        // Серия 2: Солнце – оранжевая точка
         renderer.setSeriesLinesVisible(2, false);
         renderer.setSeriesShapesVisible(2, true);
         renderer.setSeriesPaint(2, Color.ORANGE);

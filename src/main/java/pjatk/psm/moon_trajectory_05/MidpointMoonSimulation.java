@@ -5,18 +5,21 @@ import org.jfree.data.xy.XYSeries;
 public class MidpointMoonSimulation {
 
     // Физические константы
-    static final double G = 6.6743e-11;     // Гравитационная постоянная [м^3/(кг·с^2)]
-    static final double M_S = 1.989e30;       // Масса Солнца [кг]
-    static final double M_E = 5.972e24;       // Масса Земли [кг]
+    static final double G = 6.6743e-11;      // Гравитационная постоянная [м^3/(кг·с^2)]
+    static final double M_S = 1.989e30;        // Масса Солнца [кг]
+    static final double M_E = 5.972e24;        // Масса Земли [кг]
+    static final double M_M = 7.347e22;        // Масса Луны [кг]
+
     // Радиусы орбит
-    static final double R_es = 1.5e11;        // Расстояние Земля-Солнце [м]
-    static final double R_em = 3.844e8;       // Расстояние Земля-Луна [м]
-    // Коэффициент масштабирования траектории Луны для визуализации
+    static final double R_es = 1.5e11;         // Расстояние Земля-Солнце [м]
+    static final double R_em = 3.844e8;        // Расстояние Земля-Луна [м]
+
+    // Коэффициент масштабирования траектории Луны для визуализации (чтобы "волна" была видна)
     static final double MOON_TRAJECTORY_SCALE = 25.0;
 
     // Параметры симуляции
-    double dt = 21600; // шаг по времени – 6 часов (в секундах)
-    double totalTime = 365.25 * 24 * 3600; // время симуляции – один год (в секундах)
+    double dt = 21600;                      // шаг по времени – 6 часов (в секундах)
+    double totalTime = 365.25 * 24 * 3600;    // время симуляции – один год (в секундах)
 
     // Состояние Земли (абсолютные координаты относительно Солнца)
     double xE, yE;
@@ -41,18 +44,20 @@ public class MidpointMoonSimulation {
         sunSeries.add(0, 0);
 
         // Начальные условия для Земли:
-        // Земля расположена в точке (R_es, 0) и движется со скоростью по оси Y для круговой орбиты
+        // Земля расположена в точке (R_es, 0) и движется со скоростью по оси Y для круговой орбиты вокруг Солнца
         xE = R_es;
         yE = 0;
         vxE = 0;
         vyE = Math.sqrt(G * M_S / R_es);
 
         // Начальные условия для Луны относительно Земли:
-        // Луна расположена в точке (R_em, 0) и движется со скоростью по оси Y для круговой орбиты вокруг Земли
+        // Луна расположена в точке (R_em, 0)
+        // Для круговой орбиты относительно Земли скорость задается как:
+        // v = sqrt( G*(M_E + M_M)/R_em )
         xM = R_em;
         yM = 0;
         vxM = 0;
-        vyM = Math.sqrt(G * M_E / R_em);
+        vyM = Math.sqrt(G * (M_E + M_M) / R_em);
     }
 
     /**
@@ -88,8 +93,9 @@ public class MidpointMoonSimulation {
 
             // --- Интегрирование движения Луны вокруг Земли ---
             double rM = Math.sqrt(xM * xM + yM * yM);
-            double axM = -G * M_E * xM / (rM * rM * rM);
-            double ayM = -G * M_E * yM / (rM * rM * rM);
+            // Используем суммарную массу для расчёта относительного ускорения Луны
+            double axM = -G * (M_E + M_M) * xM / (rM * rM * rM);
+            double ayM = -G * (M_E + M_M) * yM / (rM * rM * rM);
 
             // Шаг метода середины для Луны
             double xM_mid = xM + vxM * dt / 2;
@@ -98,8 +104,8 @@ public class MidpointMoonSimulation {
             double vyM_mid = vyM + ayM * dt / 2;
 
             double rM_mid = Math.sqrt(xM_mid * xM_mid + yM_mid * yM_mid);
-            double axM_mid = -G * M_E * xM_mid / (rM_mid * rM_mid * rM_mid);
-            double ayM_mid = -G * M_E * yM_mid / (rM_mid * rM_mid * rM_mid);
+            double axM_mid = -G * (M_E + M_M) * xM_mid / (rM_mid * rM_mid * rM_mid);
+            double ayM_mid = -G * (M_E + M_M) * yM_mid / (rM_mid * rM_mid * rM_mid);
 
             // Обновляем положение и скорость Луны относительно Земли
             xM += vxM_mid * dt;
@@ -109,15 +115,13 @@ public class MidpointMoonSimulation {
         }
     }
 
-    // Геттеры для серий
+    // Геттеры для серий (для построения графика)
     public XYSeries getEarthSeries() {
         return earthSeries;
     }
-
     public XYSeries getMoonSeries() {
         return moonSeries;
     }
-
     public XYSeries getSunSeries() {
         return sunSeries;
     }
