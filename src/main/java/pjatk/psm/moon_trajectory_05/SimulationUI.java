@@ -60,9 +60,6 @@ class SimulationUI {
         frame.setVisible(true);
     }
 
-    /**
-     * Настройка отображения графика: отключение линий и включение отрисовки маркеров (точек).
-     */
     private void customizeChart(JFreeChart chart) {
         XYPlot plot = chart.getXYPlot();
 
@@ -78,13 +75,13 @@ class SimulationUI {
         renderer.setSeriesLinesVisible(0, false);
         renderer.setSeriesShapesVisible(0, true);
         renderer.setSeriesPaint(0, Color.GREEN);
-        renderer.setSeriesShape(0, new Ellipse2D.Double(-2, -2, 4, 4));
+        renderer.setSeriesShape(0, new Ellipse2D.Double(-2, -2, 2, 2));
 
         // Серия 1: Траектория Луны – серые точки
         renderer.setSeriesLinesVisible(1, false);
         renderer.setSeriesShapesVisible(1, true);
         renderer.setSeriesPaint(1, Color.LIGHT_GRAY);
-        renderer.setSeriesShape(1, new Ellipse2D.Double(-2, -2, 4, 4));
+        renderer.setSeriesShape(1, new Ellipse2D.Double(-2, -2, 2, 2));
 
         // Серия 2: Солнце – оранжевая точка
         renderer.setSeriesLinesVisible(2, false);
