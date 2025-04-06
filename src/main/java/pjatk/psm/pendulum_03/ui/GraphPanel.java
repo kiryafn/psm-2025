@@ -1,4 +1,4 @@
-package pjatk.psm.task03.ui;
+package pjatk.psm.pendulum_03.ui;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -18,7 +18,6 @@ public class GraphPanel extends JPanel {
     public GraphPanel() {
         setLayout(new GridLayout(1, 2));
 
-        // Создаем начальные холостые графики
         energyChartPanel = new ChartPanel(null);
         phaseChartPanel = new ChartPanel(null);
 
@@ -26,7 +25,6 @@ public class GraphPanel extends JPanel {
         add(phaseChartPanel);
     }
 
-    // Метод для обновления графика энергоизменений
     public void updateEnergyChart(XYSeries potential, XYSeries kinetic, XYSeries total, String method) {
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(potential);
@@ -42,7 +40,6 @@ public class GraphPanel extends JPanel {
         energyChartPanel.setChart(chart);
     }
 
-    // Метод для обновления графика фазовой траектории с точной настройкой точки в виде круга
     public void updatePhaseChart(XYSeries phase, String method) {
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(phase);
@@ -54,27 +51,20 @@ public class GraphPanel extends JPanel {
                 dataset
         );
 
-        // Доступ к построению графика
         XYPlot plot = chart.getXYPlot();
 
-        // Настраиваем кастомный рендерер
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 
-        // Отключаем соединение точек
         renderer.setSeriesLinesVisible(0, false);
 
-        // Задаем форму: маленькие круги вместо квадратов
-        renderer.setSeriesShape(0, new java.awt.geom.Ellipse2D.Double(-2, -2, 4, 4)); // Круг размером 4x4 пикселя
+        renderer.setSeriesShape(0, new java.awt.geom.Ellipse2D.Double(-2, -2, 4, 4));
         renderer.setSeriesShapesVisible(0, true);
 
-        // Применяем рендерер к графику
         plot.setRenderer(renderer);
 
-        // Обновляем диаграмму в панели
         phaseChartPanel.setChart(chart);
     }
 
-    // Очистить графики
     public void clearCharts() {
         energyChartPanel.setChart(null);
         phaseChartPanel.setChart(null);

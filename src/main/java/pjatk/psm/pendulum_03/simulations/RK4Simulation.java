@@ -1,4 +1,4 @@
-package pjatk.psm.task03.simulations;
+package pjatk.psm.pendulum_03.simulations;
 
 public class RK4Simulation extends BaseSimulation {
 

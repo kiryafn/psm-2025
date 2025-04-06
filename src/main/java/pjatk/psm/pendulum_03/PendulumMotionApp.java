@@ -1,19 +1,21 @@
-package pjatk.psm.task03.ui;
+package pjatk.psm.pendulum_03;
 
 import org.jfree.data.xy.XYSeries;
-import pjatk.psm.task03.simulations.MidpointSimulation;
-import pjatk.psm.task03.simulations.RK4Simulation;
-import pjatk.psm.task03.simulations.Simulation;
+import pjatk.psm.pendulum_03.simulations.MidpointSimulation;
+import pjatk.psm.pendulum_03.simulations.RK4Simulation;
+import pjatk.psm.pendulum_03.simulations.Simulation;
+import pjatk.psm.pendulum_03.ui.GraphPanel;
+import pjatk.psm.pendulum_03.ui.InputPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class SimulationApp extends JFrame {
+public class PendulumMotionApp extends JFrame {
     private InputPanel inputPanel;
     private GraphPanel graphPanel;
 
-    public SimulationApp() {
+    public PendulumMotionApp() {
         super("Pendulum Simulation");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1200, 600);
@@ -39,7 +41,6 @@ public class SimulationApp extends JFrame {
             double timeStep = inputPanel.getTimeStep();
             String method = inputPanel.getSimulationMethod();
 
-            // Выбираем метод симуляции
             Simulation simulation;
             if ("Midpoint".equals(method)) {
                 simulation = new MidpointSimulation(mass, length, initialAngle, 0, timeStep, totalTime);
@@ -47,10 +48,8 @@ public class SimulationApp extends JFrame {
                 simulation = new RK4Simulation(mass, length, initialAngle, 0, timeStep, totalTime);
             }
 
-            // Выполняем симуляцию
             simulation.runSimulation();
 
-            // Достаём результаты
             List<Double[]> results = simulation.getResults();
             XYSeries potentialSeries = new XYSeries("Potential Energy");
             XYSeries kineticSeries = new XYSeries("Kinetic Energy");
@@ -81,7 +80,7 @@ public class SimulationApp extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            SimulationApp app = new SimulationApp();
+            PendulumMotionApp app = new PendulumMotionApp();
             app.setVisible(true);
         });
     }

@@ -1,6 +1,4 @@
-package pjatk.psm.task03.simulations;
-
-import pjatk.psm.task03.simulations.BaseSimulation;
+package pjatk.psm.pendulum_03.simulations;
 
 public class MidpointSimulation extends BaseSimulation {
 

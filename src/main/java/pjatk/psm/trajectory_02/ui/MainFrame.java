@@ -1,7 +1,7 @@
-package pjatk.psm.task02.ui;
+package pjatk.psm.trajectory_02.ui;
 
-import pjatk.psm.task02.simulations.EulerSimulation;
-import pjatk.psm.task02.simulations.MidpointSimulation;
+import pjatk.psm.trajectory_02.simulations.EulerSimulation;
+import pjatk.psm.trajectory_02.simulations.MidpointSimulation;
 
 import javax.swing.*;
 import java.awt.*;

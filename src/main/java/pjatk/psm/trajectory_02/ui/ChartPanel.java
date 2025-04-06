@@ -1,4 +1,4 @@
-package pjatk.psm.task02.ui;
+package pjatk.psm.trajectory_02.ui;
 
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;

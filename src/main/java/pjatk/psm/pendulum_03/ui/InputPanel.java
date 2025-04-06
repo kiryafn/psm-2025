@@ -1,4 +1,4 @@
-package pjatk.psm.task03.ui;
+package pjatk.psm.pendulum_03.ui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,6 @@ public class InputPanel extends JPanel {
         add(simulateButton);
     }
 
-    // Методы для получения пользовательских значений
     public double getMass() {
         return Double.parseDouble(tfMass.getText());
     }

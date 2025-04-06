@@ -1,6 +1,6 @@
-package pjatk.psm.task02;
+package pjatk.psm.trajectory_02;
 
-import pjatk.psm.task02.ui.MainFrame;
+import pjatk.psm.trajectory_02.ui.MainFrame;
 
 import javax.swing.*;
 

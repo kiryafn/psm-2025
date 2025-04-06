@@ -1,4 +1,4 @@
-package pjatk.psm.task03.simulations;
+package pjatk.psm.pendulum_03.simulations;
 
 import java.util.ArrayList;
 import java.util.List;
