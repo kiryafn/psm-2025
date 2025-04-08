@@ -4,42 +4,33 @@ import org.jfree.data.xy.XYSeries;
 
 public class MidpointMoonSimulation {
 
-    // Физические константы
-    static final double G = 6.6743e-11;      // Гравитационная постоянная [м^3/(кг·с^2)]
-    static final double M_S = 1.989e30;        // Масса Солнца [кг]
-    static final double M_E = 5.972e24;        // Масса Земли [кг]
-    static final double M_M = 7.347e22;        // Масса Луны [кг]
+    static final double G = 6.6743e-11;
+    static final double M_S = 1.989e30;
+    static final double M_E = 5.972e24;
+    static final double M_M = 7.347e22;
 
-    // Радиусы орбит
-    static final double R_es = 1.5e11;         // Расстояние Земля-Солнце [м]
-    static final double R_em = 3.844e8;         // Расстояние Земля-Луна [м]
+    static final double R_es = 1.5e11;
+    static final double R_em = 3.844e8;
 
-    // Коэффициент масштабирования траектории Луны для визуализации
     static final double MOON_TRAJECTORY_SCALE = 25;
 
-    // Параметры симуляции
-    double dt = 3600;                       // 1 час (в секундах)
-    double totalTime;    // по умолчанию 1 год (в секундах)
+    double dt = 3600;
+    double totalTime;
 
-    // Состояние Земли (абсолютные координаты относительно Солнца)
     double xE, yE;
     double vxE, vyE;
 
-    // Состояние Луны (координаты относительно Земли)
     double xM, yM;
     double vxM, vyM;
 
-    // Серии для графика
     private final XYSeries earthSeries;
     private final XYSeries moonSeries;
     private final XYSeries sunSeries;
 
-    // Конструктор по умолчанию – 1 год симуляции
     public MidpointMoonSimulation() {
         this(365.25 * 24 * 3600);
     }
 
-    // Конструктор с заданной длительностью симуляции (в секундах)
     public MidpointMoonSimulation(double totalTime) {
         this.totalTime = totalTime;
         earthSeries = new XYSeries("Earth Orbit");
@@ -48,22 +39,17 @@ public class MidpointMoonSimulation {
 
         sunSeries.add(0, 0);
 
-        // Начальные условия для Земли:
-        xE = R_es;
-        yE = 0;
-        vxE = 0;
-        vyE = Math.sqrt(G * M_S / R_es);
+        xE = 0;
+        yE = R_es;
+        vxE = Math.sqrt(G * M_S / R_es);
+        vyE = 0;
 
-        // Начальные условия для Луны относительно Земли:
-        xM = R_em;
-        yM = 0;
-        vxM = 0;
-        vyM = Math.sqrt(G * (M_E + M_M) / R_em);
+        xM = 0;
+        yM = R_em;
+        vxM = Math.sqrt(G * (M_E + M_M) / R_em);
+        vyM = 0;
     }
 
-    /**
-     * Выполняет численное моделирование движения Земли и Луны методом середины.
-     */
     public void run() {
         int steps = (int) (totalTime / dt);
         for (int i = 0; i < steps; i++) {
