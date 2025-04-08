@@ -59,15 +59,18 @@ public class MidpointMoonSimulation {
 
             //Earth around Sun
             double rE = Math.sqrt(xE * xE + yE * yE);
+
             double axE = -G * M_S * xE / (Math.pow(rE, 3));
             double ayE = -G * M_S * yE / (Math.pow(rE, 3));
 
             double xE_mid  = xE + vxE * dt / 2;
             double yE_mid  = yE + vyE * dt / 2;
+
             double vxE_mid = vxE + axE * dt / 2;
             double vyE_mid = vyE + ayE * dt / 2;
 
             double rE_mid = Math.sqrt(xE_mid * xE_mid + yE_mid * yE_mid);
+
             double axE_mid = -G * M_S * xE_mid / (rE_mid * rE_mid * rE_mid);
             double ayE_mid = -G * M_S * yE_mid / (rE_mid * rE_mid * rE_mid);
 
@@ -78,15 +81,18 @@ public class MidpointMoonSimulation {
 
             //Moon around Earth
             double rM = Math.sqrt(xM * xM + yM * yM);
+
             double axM = -G * (M_E + M_M) * xM / (rM * rM * rM);
             double ayM = -G * (M_E + M_M) * yM / (rM * rM * rM);
 
             double xM_mid  = xM + vxM * dt / 2;
             double yM_mid  = yM + vyM * dt / 2;
+
             double vxM_mid = vxM + axM * dt / 2;
             double vyM_mid = vyM + ayM * dt / 2;
 
             double rM_mid = Math.sqrt(xM_mid * xM_mid + yM_mid * yM_mid);
+
             double axM_mid = -G * (M_E + M_M) * xM_mid / (rM_mid * rM_mid * rM_mid);
             double ayM_mid = -G * (M_E + M_M) * yM_mid / (rM_mid * rM_mid * rM_mid);
 

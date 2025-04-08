@@ -21,19 +21,15 @@ public class SimulationUI {
     private JTextField timeField;
     private JFrame frame;
 
-    // Конструктор принимает серии, полученные из симуляции
     public SimulationUI(org.jfree.data.xy.XYSeries earthSeries,
                         org.jfree.data.xy.XYSeries moonSeries,
                         org.jfree.data.xy.XYSeries sunSeries) {
         dataset = new XYSeriesCollection();
-        dataset.addSeries(earthSeries);  // Серия 0 – орбита Земли
-        dataset.addSeries(moonSeries);     // Серия 1 – траектория Луны
-        dataset.addSeries(sunSeries);      // Серия 2 – Солнце
+        dataset.addSeries(earthSeries);
+        dataset.addSeries(moonSeries);
+        dataset.addSeries(sunSeries);
     }
 
-    /**
-     * Создает окно с графиком и панелью управления.
-     */
     public void displayChart() {
         JFreeChart chart = ChartFactory.createXYLineChart(
                 "Moon Orbit Simulation",
@@ -41,18 +37,16 @@ public class SimulationUI {
                 "Y (m)",
                 dataset,
                 PlotOrientation.VERTICAL,
-                true,    // легенда
-                true,    // tooltips
-                false    // urls
+                true,
+                true,
+                false
         );
         customizeChart(chart);
         chartPanel = new ChartPanel(chart);
 
-        // Панель управления: текстовое поле для длительности симуляции (в годах) и кнопка "Simulate"
         JPanel controlPanel = new JPanel();
         controlPanel.add(new JLabel("Simulation Time (years):"));
         timeField = new JTextField(10);
-        // По умолчанию 1 год
         timeField.setText("1");
         controlPanel.add(timeField);
 
@@ -76,9 +70,6 @@ public class SimulationUI {
         frame.setVisible(true);
     }
 
-    /**
-     * Создает новую симуляцию с заданной длительностью (в годах), запускает расчет и обновляет график.
-     */
     private void simulateAndUpdateChart() {
         double years;
         try {
@@ -87,7 +78,6 @@ public class SimulationUI {
             JOptionPane.showMessageDialog(frame, "Invalid simulation time format.");
             return;
         }
-        // Переводим длительность из лет в секунды
         double simTimeSec = years * 365.25 * 24 * 3600;
         MidpointMoonSimulation simulation = new MidpointMoonSimulation(simTimeSec);
         simulation.run();
@@ -111,9 +101,7 @@ public class SimulationUI {
         chartPanel.setChart(chart);
     }
 
-    /**
-     * Кастомизация графика: задаются цвета, стиль линий и диапазоны осей.
-     */
+
     private void customizeChart(JFreeChart chart) {
         XYPlot plot = chart.getXYPlot();
 
@@ -123,19 +111,16 @@ public class SimulationUI {
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 
-        // Серия 0: орбита Земли – зеленые точки
         renderer.setSeriesLinesVisible(0, false);
         renderer.setSeriesShapesVisible(0, true);
         renderer.setSeriesPaint(0, new Color(32, 207, 35));
         renderer.setSeriesShape(0, new Ellipse2D.Double(-2, -2, 2, 2));
 
-        // Серия 1: траектория Луны – серые точки
         renderer.setSeriesLinesVisible(1, false);
         renderer.setSeriesShapesVisible(1, true);
         renderer.setSeriesPaint(1, Color.LIGHT_GRAY);
         renderer.setSeriesShape(1, new Ellipse2D.Double(-2, -2, 2, 2));
 
-        // Серия 2: Солнце – оранжевая точка
         renderer.setSeriesLinesVisible(2, false);
         renderer.setSeriesShapesVisible(2, true);
         renderer.setSeriesPaint(2, Color.ORANGE);
