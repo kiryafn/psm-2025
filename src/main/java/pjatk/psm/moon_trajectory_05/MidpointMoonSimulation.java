@@ -15,7 +15,7 @@ public class MidpointMoonSimulation {
     static final double R_em = 3.844e8;         // Расстояние Земля-Луна [м]
 
     // Коэффициент масштабирования траектории Луны для визуализации
-    static final double MOON_TRAJECTORY_SCALE = 25.0;
+    static final double MOON_TRAJECTORY_SCALE = 25;
 
     // Параметры симуляции
     double dt = 3600;                       // 1 час (в секундах)
@@ -46,7 +46,6 @@ public class MidpointMoonSimulation {
         moonSeries  = new XYSeries("Moon Trajectory");
         sunSeries   = new XYSeries("Sun");
 
-        // Солнце в центре (0,0)
         sunSeries.add(0, 0);
 
         // Начальные условия для Земли:
@@ -70,12 +69,12 @@ public class MidpointMoonSimulation {
         for (int i = 0; i < steps; i++) {
             earthSeries.add(xE, yE);
             moonSeries.add(xE + xM * MOON_TRAJECTORY_SCALE,
-                    yE + yM * MOON_TRAJECTORY_SCALE);
+                           yE + yM * MOON_TRAJECTORY_SCALE);
 
-            // Интегрирование движения Земли вокруг Солнца
+            //Earth around Sun
             double rE = Math.sqrt(xE * xE + yE * yE);
-            double axE = -G * M_S * xE / (rE * rE * rE);
-            double ayE = -G * M_S * yE / (rE * rE * rE);
+            double axE = -G * M_S * xE / (Math.pow(rE, 3));
+            double ayE = -G * M_S * yE / (Math.pow(rE, 3));
 
             double xE_mid  = xE + vxE * dt / 2;
             double yE_mid  = yE + vyE * dt / 2;
@@ -91,7 +90,7 @@ public class MidpointMoonSimulation {
             vxE += axE_mid * dt;
             vyE += ayE_mid * dt;
 
-            // Интегрирование движения Луны вокруг Земли
+            //Moon around Earth
             double rM = Math.sqrt(xM * xM + yM * yM);
             double axM = -G * (M_E + M_M) * xM / (rM * rM * rM);
             double ayM = -G * (M_E + M_M) * yM / (rM * rM * rM);

@@ -117,16 +117,16 @@ public class SimulationUI {
     private void customizeChart(JFreeChart chart) {
         XYPlot plot = chart.getXYPlot();
 
-        plot.setBackgroundPaint(new Color(10, 0, 48));
-        plot.setDomainGridlinePaint(Color.BLACK);
-        plot.setRangeGridlinePaint(Color.BLACK);
+        plot.setBackgroundPaint(new Color(4, 0, 18));
+        plot.setDomainGridlinePaint(Color.LIGHT_GRAY);
+        plot.setRangeGridlinePaint(Color.LIGHT_GRAY);
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 
         // Серия 0: орбита Земли – зеленые точки
         renderer.setSeriesLinesVisible(0, false);
         renderer.setSeriesShapesVisible(0, true);
-        renderer.setSeriesPaint(0, new Color(0, 120, 1));
+        renderer.setSeriesPaint(0, new Color(32, 207, 35));
         renderer.setSeriesShape(0, new Ellipse2D.Double(-2, -2, 2, 2));
 
         // Серия 1: траектория Луны – серые точки
